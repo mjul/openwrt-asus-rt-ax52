@@ -182,11 +182,22 @@ You can also do it from the command line like this:
     uci commit
     service  network restart
 
+See documentation at https://openwrt.org/docs/guide-user/network/ipv4/configuration
+
 With the new IP address, it will not collide with any 192.168.1.1/24 devices (e.g. assuming this is your default router) on the local network, allowing you to work with an existing network connection and the new router at the same time.
 
 Now, plug in your OpenWrt router to you local network (connect its WAN port to the LAN of your existing router).
 
 With the change of IP-address, LuCI is on https://192.168.99.1
+
+
+## Set up WireGuard on the Router
+
+You can use these documentation links:
+- 
+- a guide from Mullvad: https://mullvad.net/en/help/running-wireguard-router
+
+
 
 
 ## Other Settings in LuCI
