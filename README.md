@@ -34,8 +34,7 @@ See the ASUS user manual, section 4.2.
 
 
 ## OpenWRT Hardwaredata
-
-https://openwrt.org/toh/hwdata/asus/asus_rt-ax52
+Here is the OpenWrt information about the Asus RT-AX52 router: https://openwrt.org/toh/hwdata/asus/asus_rt-ax52
 
 ## OpenWRT Firmware
 
@@ -194,8 +193,32 @@ With the change of IP-address, LuCI is on https://192.168.99.1
 ## Set up WireGuard on the Router
 
 You can use these documentation links:
-- 
+- OpenWrt WireGuard client docs: https://openwrt.org/docs/guide-user/services/vpn/wireguard/client
 - a guide from Mullvad: https://mullvad.net/en/help/running-wireguard-router
+
+### Install Packages
+First, we need some packages.
+
+Update the list of packages:
+
+    opkg update
+
+Now install the Wireguard LuCI package, it also pulls in the Wireguard kernel extensions and all the necessary
+packages.
+
+    opkg install luci-proto-wireguard
+
+Now reboot the router.
+
+    reboot
+
+It will now reboot with the Wireguard kernel extensions. 
+
+For Mullvad VPN it is also useful to install `curl` so you can easily get an IP-address
+
+    opkg install curl
+
+## Generate WireGuard Device Keys
 
 
 
