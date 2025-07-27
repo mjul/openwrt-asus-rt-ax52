@@ -2,11 +2,9 @@
 
 Installation notes for OpenWRT on ASUS RT-AX52.
 
-This solves a major issue with OpenWRT firmware 24.10.2 (stable) which is invalid for installing 
-on the stock RT-AX52 firmware. We use a trampoline trick to install a newer snapshot build (which is valid) and then 
+This solves a major issue with OpenWRT firmware 24.10.2 (stable) which is invalid for installing
+on the stock RT-AX52 firmware. We use a trampoline trick to install a newer snapshot build (which is valid) and then
 use the built-in `sysupgrade` function to install the stable 24.10.2 build from that.
-
-
 
 ## Asus Manuals
 
@@ -18,12 +16,11 @@ Download the original firmware from ASUS in case you need to restore the device.
 
 https://www.asus.com/networking-iot-servers/wifi-routers/asus-wifi-routers/rt-ax52/helpdesk_bios?model2Name=RT-AX52
 
-
     ASUS RT-AX52 Firmware version 3.0.0.4.388_33911
     Version 3.0.0.4.388_33911
     25.23 MB
     2025/04/25
-    SHA-256 ：769FC8A3CE28F14CAE08DE1DA6BAE711BE3926BE9C5E464881824029934DE550 
+    SHA-256 ：769FC8A3CE28F14CAE08DE1DA6BAE711BE3926BE9C5E464881824029934DE550
 
 The firmware is in the downloaded file `FW_RT_AX52_300438833911.zip`
 
@@ -32,9 +29,10 @@ The firmware is in the downloaded file `FW_RT_AX52_300438833911.zip`
 For reference, in case messing with the firmware fails, there is a `Firmware Restoration` tool from ASUS. It is a Windows tool.
 See the ASUS user manual, section 4.2.
 
-
 ## OpenWRT Hardwaredata
+
 Here is the OpenWrt information about the Asus RT-AX52 router: https://openwrt.org/toh/hwdata/asus/asus_rt-ax52
+m
 
 ## OpenWRT Firmware
 
@@ -52,7 +50,6 @@ SHAT256sum `acd3234d7d53fbb0757957fc44d9650ff607cd50e924abd3bba5210c87fc7219`
 
 See guide here: https://openwrt.org/docs/guide-quick-start/verify_firmware_checksum
 
-
     cd Downloads
     certutil -hashfile openwrt-24.10.2-mediatek-filogic-asus_rt-ax52-initramfs-kernel.bin sha256
 
@@ -66,9 +63,9 @@ From the Asus user manual, section 3.1.3:
 
 To upgrade the firmware:
 
-  1. From the navigation panel, go to `Advanced Settings` > `Administration` > `Firmware Upgrade`.
-  2. In the `New Firmware File` field, click `Browse` to locate the downloaded file.
-  3. Click `Upload`.
+1. From the navigation panel, go to `Advanced Settings` > `Administration` > `Firmware Upgrade`.
+2. In the `New Firmware File` field, click `Browse` to locate the downloaded file.
+3. Click `Upload`.
 
 Note that the downloaded file with the ASUS firmware is a zip, you need to unzip first and uploaded the firmware file from there.
 
@@ -78,7 +75,7 @@ To install the OpenWRT firmware we generally use the stable versions downloaded 
 
 ### When 24.10.2 Stable Fails to Install
 
-So, perhaps you get this error when installing the Stable 24.10.2 build above in the 
+So, perhaps you get this error when installing the Stable 24.10.2 build above in the
 
     Firmware upgrade unsuccessful. This may result from incorrect image or error transmission. Please check the version of firmware and try again.
 
@@ -99,19 +96,16 @@ https://downloads.openwrt.org/releases/24.10.2/targets/mediatek/filogic/openwrt-
 Snapshot builds do not have the LuCI web interface installed, that stable builds provide at http://192.168.1.1, so you have to use ssh to
 do this, see this guide at: https://openwrt.org/docs/guide-quick-start/sshadministration
 
-
     ssh root@192.168.1.1
-
 
 There is initially no root password. Set this.
 
-Here is how to install the sysupgrade:  
+Here is how to install the sysupgrade:
 
 https://openwrt.org/docs/guide-user/installation/sysupgrade.cli
 
-
-Now the snapshot is not ready for any of this (no SCP, no SFTP), 
-so we have to find another way. 
+Now the snapshot is not ready for any of this (no SCP, no SFTP),
+so we have to find another way.
 
 Do this in WSL (from Linux):
 
@@ -126,11 +120,10 @@ However, we can copy the image using this command (use the WSL Linux, this does 
 
 Note that the /tmp directory is in RAM. There is no network enabled on the device yet.
 
-
 ### Upgrade OpenWRT Firmware on Router
 
 This is called "sysupgrade". `ssh` into the the router. Note the
-welcome message, we are running `OpenWrt SNAPSHOT, r30497-d8e738e5c4`. Now install the stable sysupgrade we just copied 
+welcome message, we are running `OpenWrt SNAPSHOT, r30497-d8e738e5c4`. Now install the stable sysupgrade we just copied
 over to the `/tmp` directory:
 
     sysupgrade -v /tmp/openwrt-24.10.2-mediatek-filogic-asus_rt-ax52-squashfs-sysupgrade.bin
@@ -170,7 +163,6 @@ You can now follow the setup guide, let's turn it on from the CLI as show in htt
 Go to LuCI and set up the ESSIDs http://192.168.1.1 you can
 follow this guide: https://openwrt.org/docs/guide-quick-start/walkthrough_wifi
 
-
 ## Change the IP Address on the LAN
 
 You can change the IP-address of the router in LuCI under `Settings > Network > Interfaces` and `Edit` to change the IP V4 address of the router to `192.168.99.1` with a `255.255.255.0` netmask (`/24`). Using LuCI it reverts the config to a known safe mode if something goes wrong.
@@ -189,14 +181,15 @@ Now, plug in your OpenWrt router to you local network (connect its WAN port to t
 
 With the change of IP-address, LuCI is on https://192.168.99.1
 
-
 ## Set up WireGuard on the Router
 
 You can use these documentation links:
+
 - OpenWrt WireGuard client docs: https://openwrt.org/docs/guide-user/services/vpn/wireguard/client
 - a guide from Mullvad: https://mullvad.net/en/help/running-wireguard-router
 
 ### Install Packages
+
 First, we need some packages.
 
 Update the list of packages:
@@ -212,7 +205,7 @@ Now reboot the router.
 
     reboot
 
-It will now reboot with the Wireguard kernel extensions. 
+It will now reboot with the Wireguard kernel extensions.
 
 For Mullvad VPN it is also useful to install `curl` so you can easily get an IP-address
 
@@ -220,15 +213,12 @@ For Mullvad VPN it is also useful to install `curl` so you can easily get an IP-
 
 ## Generate WireGuard Device Keys
 
-
-
-
 ## Other Settings in LuCI
 
 ### System > System Properties
 
- - Set `Timezone`
-
+- Set `Timezone`
 
 ## TODO
- - Set up MAC whitelisting
+
+- Set up MAC whitelisting
