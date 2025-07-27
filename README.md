@@ -2,6 +2,12 @@
 
 Installation notes for OpenWRT on ASUS RT-AX52.
 
+This solves a major issue with OpenWRT firmware 24.10.2 (stable) which is invalid for installing 
+on the stock RT-AX52 firmware. We use a trampoline trick to install a newer snapshot build (which is valid) and then 
+use the built-in `sysupgrade` function to install the stable 24.10.2 build from that.
+
+
+
 ## Asus Manuals
 
 https://www.asus.com/networking-iot-servers/wifi-routers/asus-wifi-routers/rt-ax52/helpdesk_manual?model2Name=RT-AX52
@@ -152,8 +158,43 @@ Set the password again using the `passwd` command.
 
 Now, the Stable firmware image has the LuCI we interface, so we can now open http://192.168.1.1
 
-You can now follow the setup guide.
+You can now follow the setup guide, let's turn it on from the CLI as show in https://openwrt.org/docs/guide-quick-start/basic_wifi
+
+    uci show wireless
+    uci set wireless.radio0.country='DK'
+    uci set wireless.radio0.disabled='0'
+    uci set wireless.radio1.country='DK'
+    uci set wireless.radio1.disabled='0'
+    uci commit wireless
+    wifi reload
+
+Go to LuCI and set up the ESSIDs http://192.168.1.1 you can
+follow this guide: https://openwrt.org/docs/guide-quick-start/walkthrough_wifi
 
 
+## Change the IP Address on the LAN
+
+You can change the IP-address of the router in LuCI under `Settings > Network > Interfaces` and `Edit` to change the IP V4 address of the router to `192.168.99.1` with a `255.255.255.0` netmask (`/24`). Using LuCI it reverts the config to a known safe mode if something goes wrong.
+
+You can also do it from the command line like this:
+
+    uci set network.lan.ipaddr 192.168.99.1
+    uci commit
+    service  network restart
+
+With the new IP address, it will not collide with any 192.168.1.1/24 devices (e.g. assuming this is your default router) on the local network, allowing you to work with an existing network connection and the new router at the same time.
+
+Now, plug in your OpenWrt router to you local network (connect its WAN port to the LAN of your existing router).
+
+With the change of IP-address, LuCI is on https://192.168.99.1
 
 
+## Other Settings in LuCI
+
+### System > System Properties
+
+ - Set `Timezone`
+
+
+## TODO
+ - Set up MAC whitelisting
