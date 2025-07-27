@@ -185,8 +185,8 @@ With the change of IP-address, LuCI is on https://192.168.99.1
 
 You can use these documentation links:
 
-- OpenWrt WireGuard client docs: https://openwrt.org/docs/guide-user/services/vpn/wireguard/client
-- a guide from Mullvad: https://mullvad.net/en/help/running-wireguard-router
+- OpenWrt WireGuard client docs, does not use a bridge: https://openwrt.org/docs/guide-user/services/vpn/wireguard/client
+- a guide from Mullvad, similar to the above: https://mullvad.net/en/help/running-wireguard-router
 
 ### Install Packages
 
@@ -207,11 +207,16 @@ Now reboot the router.
 
 It will now reboot with the Wireguard kernel extensions.
 
-For Mullvad VPN it is also useful to install `curl` so you can easily get an IP-address
-
-    opkg install curl
-
 ## Generate WireGuard Device Keys
+
+Generate keys for the OpenWrt device after making sure they will be created with file mode mask 600:
+
+    umask go=
+    wg genkey | tee wg.key | wg pubkey > wg.pub
+
+See documentation at: https://openwrt.org/docs/guide-user/services/vpn/wireguard/basics
+
+Now, add the public key to the WireGuard server you will be connecting to according to its instructions.
 
 ## Other Settings in LuCI
 
@@ -221,4 +226,6 @@ For Mullvad VPN it is also useful to install `curl` so you can easily get an IP-
 
 ## TODO
 
+- Guest Wifi https://openwrt.org/docs/guide-user/network/wifi/guestwifi/configuration_command_line_interface
 - Set up MAC whitelisting
+- Add IOT network
